@@ -1,0 +1,35 @@
+[package]
+name = "advent-of-code-2020"
+version = "0.1.0"
+authors = ["Tom Bereknyei <tom@rebelliondefense.com>"]
+edition = "2018"
+
+# [unstable]
+# repr_simd = true
+# const_fn = true
+# platform_intrinsics = true
+# custom_inner_ttributes = true
+# try_blocks = true
+
+[lib]
+bench = true
+
+[dependencies]
+fasthash = "*"
+ndarray = "*"
+futures = "*"
+array2d = "*"
+nohash-hasher = "*"
+scan_fmt = "*"
+#packed_simd = "0.3.3"
+crypto = "0.1.2"
+itertools = "0.9.0"
+rayon = "1.5.0"
+aoc-runner = "0.2.2"
+aoc-runner-derive = "0.2.2"
+lazy_static = "*"
+regex = "*"
+
+[dev-dependencies]
+criterion = "0.3"
+
