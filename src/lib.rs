@@ -1,6 +1,9 @@
 #![feature(bool_to_option)]
 #![feature(map_into_keys_values)]
 #![feature(unchecked_math)]
+#![feature(linked_list_cursors)]
+#![feature(cell_update)]
+#![feature(hash_raw_entry)]
 
 extern crate aoc_runner;
 
@@ -20,13 +23,16 @@ use aoc_runner_derive::aoc_lib;
 // pub mod day12;
 // pub mod day13;
 // pub mod day14;
-pub mod day15;
-pub mod day16;
-pub mod day17;
-pub mod day18;
-pub mod day19;
-pub mod day20;
-pub mod day21;
-pub mod day22;
+// pub mod day15;
+// pub mod day16;
+// pub mod day17;
+// pub mod day18;
+// pub mod day19;
+// pub mod day20;
+// pub mod day21;
+// pub mod day22;
+// pub mod day23;
+//pub mod day24;
+pub mod day25;
 
 aoc_lib! { year = 2020 }
