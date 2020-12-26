@@ -27,7 +27,7 @@ fn input_generator(inp: &str) -> Vec<Inst> {
             Some((op?, num?))
         })
         .map(|(op,num)|{
-            //println!("{} {}",op, num);
+            // println!("{} {}",op, num);
             match op.as_str() {
                 "acc" => Inst::Acc(num),
                 "jmp" => Inst::Jmp(num),
@@ -46,19 +46,22 @@ fn part1(inp: &Vec<Inst>) -> usize {
     let mut prg = 0;
     let mut counter = 0;
     let mut state = HashSet::new();
+
+    let mut res = 0;
     loop {
         counter +=1;
         if prg as usize == inp.len() {
-            println!("Proper exit at: {} {} {}",counter,prg,acc);
+            //println!("Proper exit at: {} {} {}",counter,prg,acc);
             break
         }
         if state.contains(&prg){
-            println!("Infinite loop at: {} {} {}",counter,prg,acc);
+            res = acc;
+            //println!("Infinite loop at: {} {} {}",counter,prg,acc);
             break
         }
         state.insert(prg);
         if counter > 100 {
-            println!(".");
+            //println!(".");
         }
         match inp[prg as usize] {
             Inst::Nop(_) => { prg += 1},
@@ -72,26 +75,14 @@ fn part1(inp: &Vec<Inst>) -> usize {
             },
         }
     }
-    return 0
+    return res as usize
 }
 
 #[aoc(day08, part2)]
 fn part2(inp: &Vec<Inst>) -> usize {
-    //let mut changed = HashSet::new();
-    // let n = inp.map(|op|{
-    //     match inp[prg as usize] {
-    //         Inst::Nop(_) => { prg += 1},
-    //         Inst::Acc(n) => {
-    //             acc += n;
-    //             prg += 1
-    //         },
-    //         Inst::Jmp(n) => {
-    //             prg += n
-
-    //     }
-    // }).collect();
 
     let inp_clone= inp.clone();
+    let mut res = 0;
     inp.iter().enumerate().for_each(|(i,p)|{
         let inp_new = &mut inp_clone.clone();
         match inp[i] {
@@ -109,11 +100,12 @@ fn part2(inp: &Vec<Inst>) -> usize {
         loop {
             counter +=1;
             if prg as usize == inp.len() {
-                println!("Proper exit at: {} {} {} {}",i, counter,prg,acc);
+                //println!("Proper exit at: {} {} {} {}",i, counter,prg,acc);
+                res = acc;
                 break
             }
             if state.contains(&prg){
-                println!("Infinite loop at: {} {} {} {}",i, counter,prg,acc);
+                // println!("Infinite loop at: {} {} {} {}",i, counter,prg,acc);
                 break
             }
             state.insert(prg);
@@ -133,5 +125,5 @@ fn part2(inp: &Vec<Inst>) -> usize {
             }
         }
     });
-    return 0
+    return res as usize
 }

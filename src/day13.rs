@@ -29,7 +29,7 @@ fn part1(inp: &str) -> usize {
         (val,val - target % val)
     }).collect();
     rems.sort_by(|(_,a),(_,b)|a.partial_cmp(b).unwrap());
-    println!("{:?}",rems);
+    //println!("{:?}",rems);
     rems[0].1 * rems[0].0
 }
 
@@ -86,26 +86,26 @@ fn part2_crt(inp: &str) -> usize {
     }
 }
 
-#[aoc(day13, part2,brute)]
-fn part2(inp: &str) -> i64 {
-    let mut l = inp.lines();
-    let target : i64= l.next().unwrap().parse().unwrap();
-    let inst : Vec<Option<i64>> =
-        l.next().unwrap().split(",").map(|a|a.parse().ok()).collect();
-    let target : i64 = 378_786_358_533_423;
-    //let target : i64 = 379786358533420;
-    (target..(target+10_000_000_000_000)).into_par_iter()
-        .filter(|p|p%37==0)
-        .filter_map(|x|{
-        inst.iter().enumerate().map(|(ind,val)|{
-            match val {
-                None => true,
-                Some(n) => {
-                    //println!("{} {} {} {} {}",x,ind,n,x%n,(n-(ind as i64))%n);
-                    (x + (ind as i64)) % n == 0
-                },
-            }
-            }).all(|p|p).then_some(x)
-        }
-    ).find_any(|_|true).unwrap()
-}
+//#[aoc(day13, part2,brute)]
+//fn part2(inp: &str) -> i64 {
+//    let mut l = inp.lines();
+//    let target : i64= l.next().unwrap().parse().unwrap();
+//    let inst : Vec<Option<i64>> =
+//        l.next().unwrap().split(",").map(|a|a.parse().ok()).collect();
+//    let target : i64 = 378_786_358_533_423;
+//    //let target : i64 = 379786358533420;
+//    (target..(target+10_000_000_000_000)).into_par_iter()
+//        .filter(|p|p%37==0)
+//        .filter_map(|x|{
+//        inst.iter().enumerate().map(|(ind,val)|{
+//            match val {
+//                None => true,
+//                Some(n) => {
+//                    //println!("{} {} {} {} {}",x,ind,n,x%n,(n-(ind as i64))%n);
+//                    (x + (ind as i64)) % n == 0
+//                },
+//            }
+//            }).all(|p|p).then_some(x)
+//        }
+//    ).find_any(|_|true).unwrap()
+//}

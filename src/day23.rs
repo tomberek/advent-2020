@@ -56,7 +56,7 @@ fn to_linked(cups: &[u32]) -> Vec<u32> {
         step_day23(len, &mut cups, &mut current_cup);
         //println!("{}", show(cups.as_slice()));
      }
-     println!("{}", show(cups.as_slice()));
+     // println!("{}", show(cups.as_slice()));
      return  show(cups.as_slice())
  }
 

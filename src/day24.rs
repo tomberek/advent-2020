@@ -115,7 +115,6 @@ fn solve1(inp: &Vec<Coord>) -> usize {
     map.values().filter(|&&a| a).count()
 }
 
-use dashmap::DashMap;
 #[aoc(day24, part2)]
 fn solve2(inp: &Vec<Coord>) -> usize {
     let mut map: HashMap<_,_> = HashMap::new();

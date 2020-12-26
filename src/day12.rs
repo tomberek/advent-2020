@@ -93,7 +93,7 @@ fn part1(inp: &Vec<Dir>) -> isize {
 fn part2(inp: &Vec<Dir>) -> isize {
     let (x,y,dir) = inp.iter()
         .fold( (0 as isize,0 as isize,(10 as isize,1 as isize)),|(x,y,(wx,wy)),op|{
-            println!("{},{}: {},{}",x,y,wx,wy);
+            //println!("{},{}: {},{}",x,y,wx,wy);
             match op {
                 Dir::N(dist) => (x,y,(wx,wy+dist)),
                 Dir::E(dist) => (x,y,(wx+dist,wy)),
@@ -110,6 +110,6 @@ fn part2(inp: &Vec<Dir>) -> isize {
                 })),
             }
         });
-    println!("{},{}: {:?}",x,y,dir);
+    //println!("{},{}: {:?}",x,y,dir);
     return x.abs()+y.abs()
 }

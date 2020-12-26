@@ -30,14 +30,10 @@ packed_simd = "*"
 crypto = "0.1.2"
 itertools = "0.9.0"
 rayon = "1.5.0"
-aoc-runner = "0.2.2"
-aoc-runner-derive = "0.2.2"
+aoc-runner = "*"
+aoc-runner-derive = "*"
 lazy_static = "*"
 regex = "*"
-
-[dependencies.dashmap]
-features = ["rayon"]
-
 
 [dev-dependencies]
 criterion = "0.3"

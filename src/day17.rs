@@ -4,42 +4,38 @@
 #![allow(unused_imports)]
 
 use aoc_runner_derive::{aoc, aoc_generator};
+use scan_fmt::{scan_fmt,scan_fmt_some};
 use rayon::prelude::*;
-use scan_fmt::{scan_fmt, scan_fmt_some};
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::fmt;
 
 use array2d::Array2D;
 
-use itertools::Itertools;
-use nohash_hasher::{IntMap, IntSet};
+use itertools::{Itertools,repeat_n};
+use nohash_hasher::{IntSet,IntMap};
 
-#[derive(Hash, Debug, Copy, Clone, PartialEq, Eq)]
+// pub struct Cell {
+//     pub x: i64,
+//     pub y: i64,
+//     pub z: i64,
+// }
+#[derive(Hash, Debug, Clone, PartialEq, Eq)]
 pub struct Cell {
-    pub x: i64,
-    pub y: i64,
-    pub z: i64,
+    point : Vec<i64>,
 }
 
-pub struct Field(HashSet<Cell>);
+pub struct Field(HashSet<Cell>,usize);
 
 type Counts = HashMap<Cell, u64>;
-type Neighbors = [Cell; 26];
+type Neighbors = Vec<Cell>;
+
 
 impl Cell {
-    fn neighbors(&self, neighbors: &mut Neighbors) {
-        let mut i = 0;
-        for x in self.x - 1..self.x + 2 {
-            for y in self.y - 1..self.y + 2 {
-                for z in self.z - 1..self.z + 2 {
-                    if (x, y, z) != (self.x, self.y, self.z) {
-                        neighbors[i] = Cell { x: x, y: y, z: z };
-                        i += 1;
-                    }
-                }
-            }
-        }
+    fn neighbors(&self) -> Neighbors {
+        (0..self.point.len()).map(|_| &[-1, 0, 1]).multi_cartesian_product().map(|n| {
+            Cell{point:self.point.iter().zip(&n).map(|(a,&b)|a+b).collect()}
+        }).collect()
     }
 }
 trait GameField {
@@ -49,25 +45,24 @@ trait GameField {
 }
 
 impl Field {
-    fn new() -> Field {
-        return Field(HashSet::new());
+    fn new(dims:usize) -> Field {
+        return Field(HashSet::new(),dims);
     }
 
-    pub fn from(desc: &str) -> Field {
-        let mut field = Field::new();
+    pub fn from(desc: &str,dims: usize) -> Field {
+        let mut field = Field::new(dims);
 
         for (y, line) in desc.split('\n').enumerate() {
             for (x, elem) in line.chars().enumerate() {
                 if elem == '#' {
+                    let mut v = vec![x as i64,y as i64];
+                    v.extend(repeat_n(0,dims-2));
                     field.0.insert(Cell {
-                        x: x as i64,
-                        y: y as i64,
-                        z: 0,
+                        point: v,
                     });
                 }
             }
         }
-
         return field;
     }
 
@@ -78,13 +73,8 @@ impl Field {
     fn neighbor_counts(&self) -> Counts {
         let mut counts: Counts = HashMap::new();
 
-        let mut neighbors: Neighbors = [Cell {
-            x: 10,
-            y: 10,
-            z: 10,
-        }; 26];
         for cell in &self.0 {
-            cell.neighbors(&mut neighbors);
+            let neighbors = cell.neighbors();
             for neighbor in &neighbors {
                 let found = match counts.get_mut(neighbor) {
                     Some(count) => {
@@ -94,7 +84,7 @@ impl Field {
                     None => false,
                 };
                 if !found {
-                    counts.insert(*neighbor, 1);
+                    counts.insert(neighbor.clone(), 1);
                 }
             }
         }
@@ -103,10 +93,11 @@ impl Field {
     }
 
     pub fn step(&self) -> Field {
-        let mut field = Field::new();
+        let mut field = Field::new(self.0.iter().next().unwrap().point.len());
 
         for (cell, count) in self.neighbor_counts() {
-            if count == 3 || self.0.contains(&cell) && count == 2 {
+            // include self
+            if count == 3 || self.0.contains(&cell) && count == 4 {
                 field.add(cell);
             }
         }
@@ -119,44 +110,22 @@ impl Field {
             return write!(f, "empty");
         }
 
-        let mut minx = i64::max_value();
-        let mut maxx = i64::min_value();
-        let mut miny = i64::max_value();
-        let mut maxy = i64::min_value();
-        let mut minz = i64::max_value();
-        let mut maxz = i64::min_value();
-
-        for cell in &self.0 {
-            if cell.x < minx {
-                minx = cell.x;
-            }
-            if cell.x > maxx {
-                maxx = cell.x;
-            }
-            if cell.y < miny {
-                miny = cell.y;
-            }
-            if cell.y > maxy {
-                maxy = cell.y;
-            }
-            if cell.z < minz {
-                minz = cell.z;
-            }
-            if cell.z > maxz {
-                maxz = cell.z;
-            }
-        }
+        let minx = &self.0.iter().map(|c|c.point[0]).min().unwrap();
+        let maxx = &self.0.iter().map(|c|c.point[0]).max().unwrap();
+        let miny = &self.0.iter().map(|c|c.point[1]).min().unwrap();
+        let maxy = &self.0.iter().map(|c|c.point[1]).max().unwrap();
+        let minz = &self.0.iter().map(|c|c.point[2]).min().unwrap();
+        let maxz = &self.0.iter().map(|c|c.point[2]).max().unwrap();
 
         for z in minz - padding..maxz + 1 + padding {
             for y in miny - padding..maxy + 1 + padding {
                 for x in minx - padding..maxx + 1 + padding {
-                    if self.0.contains(&Cell { x: x, y: y, z: z }) {
+                    if self.0.contains(&Cell { point: vec![x,y,z] }) {
                         f.write_char('#')?;
                     } else {
                         f.write_char('.')?;
                     }
                 }
-                f.write_fmt(format_args!("{}", y))?;
                 f.write_char('\n')?;
             }
             f.write_char('\n')?;
@@ -173,6 +142,7 @@ impl fmt::Display for Field {
     }
 }
 
+
 //#[aoc_generator(day17)]
 //fn input_generator(inp: &str) -> &str {
 //    return inp
@@ -181,10 +151,19 @@ impl fmt::Display for Field {
 
 #[aoc(day17, part1)]
 fn part1(inp: &str) -> usize {
-    let s = Field::from(inp);
-    println!("{}", s);
-    //println!("{:?}",s.neighbor_counts());
-    let res = (0..1).fold(s, |a, _| a.step());
-    println!("{}", res);
-    return res.0.len();
+    let mut s = Field::from(inp,3);
+    for i in 0..6{
+        //println!("{}",s);
+        s = s.step();
+    }
+    return s.0.len()
+}
+#[aoc(day17, part2)]
+fn part2(inp: &str) -> usize {
+    let mut s = Field::from(inp,4);
+    for i in 0..6{
+        //println!("{}",s);
+        s = s.step();
+    }
+    return s.0.len()
 }

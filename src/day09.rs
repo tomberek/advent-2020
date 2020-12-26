@@ -31,6 +31,32 @@ fn part1(inp: &Vec<usize>) -> usize {
     let mut bad = 0;
     inp.iter()
         .enumerate()
+        .filter(|(i,num)|{
+            if i < &preamble {
+                return false
+            }
+            let valid = &inp[i-preamble..*i]
+                .iter().tuple_combinations()
+                .map(|(&a,&b)|{
+                    if a + b == inp[*i] {
+                        return true;
+                    }
+                    return false
+                }).any(|p|p);
+            if !valid {
+                //println!("failed: {}",inp[*i]);
+                bad = inp[*i];
+                return true
+            }
+            return false
+        }).map(|(a,b)|b).next().copied().unwrap()
+}
+#[aoc(day09, part2)]
+fn part2(inp: &Vec<usize>) -> usize {
+    let preamble = 25;
+    let mut bad = 0;
+    inp.iter()
+        .enumerate()
         .map(|(i,num)|{
             if i < preamble {
                 return true
@@ -44,7 +70,7 @@ fn part1(inp: &Vec<usize>) -> usize {
                     return false
                 }).any(|p|p);
             if !valid {
-                println!("failed: {}",inp[i]);
+                // println!("failed: {}",inp[i]);
                 bad = inp[i];
                 return false
             }
@@ -52,26 +78,25 @@ fn part1(inp: &Vec<usize>) -> usize {
         }).all(|p|p);
     inp.iter()
         .enumerate()
-        .map(|(i,num)|{
+        .filter(|(i,num)|{
             let mut sum = 0;
-            for (index,x) in inp[i..].to_vec().iter().enumerate() {
+            for (index,x) in inp[*i..].to_vec().iter().enumerate() {
                 if sum > bad || *x > bad {
                     break
                 }
                 sum += x;
                 if sum == bad {
-                    let mut answer = inp[i..i+index+1].to_vec().clone();
+                    let mut answer = inp[*i..*i+index+1].to_vec().clone();
                     answer.sort_unstable();
-                    println!("found {} {} {}",
-                             answer[0],answer[answer.len()-1],
-                             answer[0]+answer[answer.len()-1],
-                             );
+                    //println!("found {} {} {}",
+                             // answer[0],answer[answer.len()-1],
+                             // answer[0]+answer[answer.len()-1],
+                             // );
                     return true
                 }
             }
             return false
         })
-        .any(|p|p);
-    return 0
+        .next().map(|(_,a)|a).copied().unwrap()
 }
 

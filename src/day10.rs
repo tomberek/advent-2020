@@ -34,7 +34,7 @@ fn part1(inp: &Vec<usize>) -> usize {
         .map(|v|{
             let res = v[1]-v[0];
             if res != 1 && res != 3{
-                println!("{} {}",v[1],v[0]);
+                //println!("{} {}",v[1],v[0]);
             }
             res
         }).collect::<Vec<usize>>();
@@ -55,7 +55,7 @@ fn part2(inp: &Vec<usize>) -> usize {
                 ways[i+1+j]+=ways[i];
             });
     });
-    println!("{:?}",ways);
+    //println!("{:?}",ways);
     return ways.last().copied().unwrap();
 }
 

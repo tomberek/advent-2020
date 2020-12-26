@@ -40,7 +40,7 @@ fn input_generator(inp: &str) -> Vec<String> {
     let mut items: Vec<String> = vec![];
     for l in inp.lines() {
         if l == "" {
-            items.sort();
+            //items.sort();
             res.push(items.join(" "));
             items.clear();
             continue;
@@ -111,24 +111,26 @@ fn parse(line: &String) -> Option<Passport> {
         .split(" ")
         .filter(|l| *l != "")
         .map(|item| {
-            let items: Vec<&str> = item.split(":").collect();
+            let mut items = item.split(":");
+            let key = items.next().unwrap();
+            let value = items.next().unwrap();
 
-            let (key, value) = (items[0], items[1]);
+            //let (key, value) = (items[0], items[1]);
             match key {
                 "byr" => {
-                    let n = scan_fmt!(value, "{/^[0-9]{4}$/}", _)?;
+                    let n = value.parse().unwrap();
                     if n >= 1920 && n <= 2002 {
                         a.byr = n;
                     }
                 }
                 "iyr" => {
-                    let n = scan_fmt!(value, "{/^[0-9]{4}$/}", _)?;
+                    let n = value.parse().unwrap();
                     if n >= 2010 && n <= 2020 {
                         a.iyr = n;
                     }
                 }
                 "eyr" => {
-                    let n = scan_fmt!(value, "{/^[0-9]{4}$/}", _)?;
+                    let n = value.parse().unwrap();
                     if n >= 2020 && n <= 2030 {
                         a.eyr = n;
                     }
@@ -143,7 +145,7 @@ fn parse(line: &String) -> Option<Passport> {
                     }
                 }
                 "hcl" => {
-                    let n = scan_fmt!(value, "#{/^[a-f0-9]{6}$/}", String)?;
+                    //let n = scan_fmt!(value, "#{/^[a-f0-9]{6}$/}", String)?;
                     if value.len() == 7 {
                         a.hcl = String::from(value);
                     }
@@ -154,7 +156,7 @@ fn parse(line: &String) -> Option<Passport> {
                     }
                 }
                 "pid" => {
-                    let n = scan_fmt!(value, "{/^[0-9]{9}$/}", String)?;
+                    let n = value;
                     if value.len() == 9 {
                         a.pid = n.parse()?;
                     }
@@ -192,6 +194,6 @@ fn part1(ps: &Vec<String>) -> usize {
 
 #[aoc(day04, part2)]
 fn part2(ps: &Vec<String>) -> usize {
-    println!("lines: {}", ps.len());
+    //println!("lines: {}", ps.len());
     return ps.iter().map(parse).filter(|s| s.is_some()).count();
 }
