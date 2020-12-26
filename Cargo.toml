@@ -35,6 +35,10 @@ aoc-runner-derive = "0.2.2"
 lazy_static = "*"
 regex = "*"
 
+[dependencies.dashmap]
+features = ["rayon"]
+
+
 [dev-dependencies]
 criterion = "0.3"
 

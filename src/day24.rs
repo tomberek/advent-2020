@@ -3,6 +3,7 @@
 #![allow(unreachable_code)]
 #![allow(unused_imports)]
 
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::collections::LinkedList;
@@ -21,7 +22,7 @@ use ndarray::prelude::*;
 use nohash_hasher::{IntMap, IntSet};
 use packed_simd::{u32x4, Simd};
 use rayon::prelude::*;
-use std::cell::*;
+use std::cell::Cell;
 
 type C = i8;
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -114,9 +115,7 @@ fn solve1(inp: &Vec<Coord>) -> usize {
     map.values().filter(|&&a| a).count()
 }
 
-use std::sync::atomic::*;
-use std::sync::*;
-use std::sync::atomic::{Ordering};
+use dashmap::DashMap;
 #[aoc(day24, part2)]
 fn solve2(inp: &Vec<Coord>) -> usize {
     let mut map: HashMap<_,_> = HashMap::new();
@@ -128,22 +127,18 @@ fn solve2(inp: &Vec<Coord>) -> usize {
         .filter_map(|(c, v)| if v { Some(c) } else { None })
         .collect();
 
-    let mut counts: HashMap<_, AtomicUsize > = HashMap::new();
+    let mut counts: HashMap<_, u8 > = HashMap::new();
     for _ in 0..100 {
         counts.clear();
-        let count_cell  = Arc::new(Mutex::new(&counts));
-        field.par_iter().flat_map(|c|adj_p(*c)).for_each(|c| {
-                //Arc::as_ptr(&countCell).as_ref().unwrap().entry(c)
-            // counts.raw_entry_mut().from_key(&c)
-            //         .and_modify(|_k,a|{a.fetch_add(1,Ordering::Relaxed);})
-            //         .or_insert(c,AtomicUsize::new(1));
-            //countCell.lock().unwrap().entry(c)
+        field.iter().flat_map(|&c|adj(c)).for_each(|c| {
+                *counts.entry(c).or_insert(0) += 1;
         });
 
         field = counts.iter()
-            .filter(|(current, count)| {
-                let c = count.load(Ordering::Relaxed);
-                return c==2 || (field.contains(&current) && c ==1)
+            .filter(|(&current, &count)| {
+            // .filter(|m|{
+            //     let (&current , &count) = m.pair();
+                return count==2 || (field.contains(&current) && count ==1)
                 // let f = field.contains(&current);
                 // if f && (count==0 || count >2) || !f && (count != 2) {
                 //     return false
@@ -151,9 +146,9 @@ fn solve2(inp: &Vec<Coord>) -> usize {
                 //    return true
                // }
             })
-            .map(|(a,_)|*a)
+            //.map(|m|*m.key())
+            .map(|(k,_)|*k)
             .collect();
-            println!("{}",field.iter().count());
     }
     // white = 0
     // black = 1
@@ -176,9 +171,9 @@ const NEIGHBORS: [[C; 2]; 6] = [
     [-1, 1],
     [-1, 0],
 ];
-fn adj(c: Coord) -> impl Iterator<Item = Coord> {
+fn adj_p(c: Coord) -> impl ParallelIterator<Item = Coord> {
     unsafe {
-        NEIGHBORS.iter().map(move |v| {
+        NEIGHBORS.par_iter().map(move |v| {
             return Coord {
                 x: c.x.unchecked_add(v[0]),
                 y: c.y.unchecked_add(v[1]),
@@ -187,9 +182,9 @@ fn adj(c: Coord) -> impl Iterator<Item = Coord> {
         })
     }
 }
-fn adj_p(c: Coord) -> impl ParallelIterator<Item = Coord> {
+fn adj(c: Coord) -> impl Iterator<Item = Coord> {
     unsafe {
-        NEIGHBORS.par_iter().map(move |v| {
+        NEIGHBORS.iter().map(move |v| {
             return Coord {
                 x: c.x.unchecked_add(v[0]),
                 y: c.y.unchecked_add(v[1]),
