@@ -4,7 +4,6 @@
 #![allow(unused_imports)]
 
 use aoc_runner_derive::{aoc, aoc_generator};
-use scan_fmt::{scan_fmt,scan_fmt_some};
 use rayon::prelude::*;
 use std::collections::HashMap;
 use std::collections::HashSet;

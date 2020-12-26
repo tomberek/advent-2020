@@ -7,12 +7,11 @@ use aoc_runner_derive::{aoc, aoc_generator};
 use rayon::prelude::*;
 use scan_fmt::{scan_fmt, scan_fmt_some};
 use std::collections::{HashMap,hash_map::Entry};
-use std::collections::HashSet;
+use nohash_hasher::{IntSet,IntMap};
+use itertools::Itertools;
 
 use array2d::Array2D;
 
-use itertools::Itertools;
-use nohash_hasher::{IntMap, IntSet};
 
 #[aoc_generator(day15)]
 fn input_generator(inp: &str) -> Vec<usize> {
@@ -37,7 +36,7 @@ fn part2(inp: &Vec<usize>) -> usize {
 const ITER: usize = 30_000_000;
 const LIMIT : usize = ITER / 10;
 pub fn run(iter: usize, inp: &[usize]) -> usize {
-    let mut hmap: HashMap<u32,u32> = HashMap::new();
+    let mut hmap: HashMap<u32,u32> = HashMap::default();
     let mut map: Vec<u32> = vec![0; LIMIT];
     let mut state = 0 as usize;
     for i in 0..inp.len() {

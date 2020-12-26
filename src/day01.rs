@@ -58,38 +58,38 @@ fn part1(nums: &[i16]) -> i32 {
 const INPUT: &str = include_str!("../input/2020/day1.txt");
 
 const TARGET: i32 = 2020;
-#[aoc(day01,part2,try)]
-pub fn part2_try(inputs: &[i16]) -> i32 {
+// #[aoc(day01,part2,try)]
+// pub fn part2_try(inputs: &[i16]) -> i32 {
 
-    let mut inputs = inputs.to_owned();
-    inputs.sort_unstable();
-    let len = inputs.len();
+//     let mut inputs = inputs.to_owned();
+//     inputs.sort_unstable();
+//     let len = inputs.len();
 
-    for (i, a) in inputs[0..(len - 2)].iter().enumerate() {
-        let mut left = i + 1;
-        let mut right = len - 1;
-        let remainder = 2020 - a;
-        while left < right {
+//     for (i, a) in inputs[0..(len - 2)].iter().enumerate() {
+//         let mut left = i + 1;
+//         let mut right = len - 1;
+//         let remainder = 2020 - a;
+//         while left < right {
 
-            let sum = inputs[left]+inputs[right];
-            match sum.cmp(&remainder) {
-                Ordering::Less => {
-                    left += 1
-                },
-                Ordering::Greater => {
-                    right -= 1
-                },
-                Ordering::Equal => {
-                    let b = inputs[left];
-                    let c = inputs[right];
-                    return (*a as i32) * (b as i32) * (c as i32)
-                }
-            }
-        }
-    }
+//             let sum = inputs[left]+inputs[right];
+//             match sum.cmp(&remainder) {
+//                 Ordering::Less => {
+//                     left += 1
+//                 },
+//                 Ordering::Greater => {
+//                     right -= 1
+//                 },
+//                 Ordering::Equal => {
+//                     let b = inputs[left];
+//                     let c = inputs[right];
+//                     return (*a as i32) * (b as i32) * (c as i32)
+//                 }
+//             }
+//         }
+//     }
 
-    unreachable!()
-}
+//     unreachable!()
+// }
 
 #[aoc(day1,part2)]
 fn part2(nums: &[i16]) -> i32 {

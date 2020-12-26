@@ -68,6 +68,7 @@ unsafe fn prev(i: u32,m:u32) -> u32 {
     }
     return (i.unchecked_add(m).unchecked_sub(1)) % m
 }
+#[inline]
 fn step_day23(len : u32, cups: &mut [u32], current_cup: &mut u32) {
 
     unsafe {
@@ -93,13 +94,19 @@ fn step_day23(len : u32, cups: &mut [u32], current_cup: &mut u32) {
     }
 }
 
+const ITER: usize = 10_000_000;
 #[aoc(day23, part2)]
 fn solve2(inp: &str) -> String{
     let input : Vec<&str> = inp.lines().collect();
-    let mut cups: Vec<u32> = input[0]
+    let mut cups: Vec<u32> = Vec::with_capacity(ITER);
+    unsafe {
+        cups.set_len(inp.len());
+    }
+    input[0]
         .chars()
-        .map(|c| c.to_digit(10).unwrap() as u32 - 1)
-        .collect();
+        .enumerate()
+        .for_each(|(i,c)|
+            cups[i]=c.to_digit(10).unwrap() as u32 - 1);
     cups.extend(cups.iter().copied().max().unwrap() + 1..=( 1_000_000  - 1));
     let mut current_cup = cups[0] as u32;
     let mut cups = to_linked(&cups);

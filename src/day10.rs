@@ -16,9 +16,7 @@ use nohash_hasher::{IntSet,IntMap};
 fn input_generator(inp: &str) -> Vec<usize> {
     let mut res = inp.lines()
         .filter_map(|line| {
-            let num =
-                scan_fmt_some!(line, "{d}", usize)?;
-            Some(num)
+            line.parse().ok()
         })
         .collect::<Vec<usize>>();
     res.push(0);
