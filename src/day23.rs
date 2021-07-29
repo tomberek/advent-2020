@@ -17,7 +17,7 @@ use std::fmt;
 use std::collections::LinkedList;
 
 use packed_simd::{Simd,u32x4};
-use faster::*;
+// use faster::*;
 
 fn show(cups: &[u32]) -> String {
     let mut out = String::new();

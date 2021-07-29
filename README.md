@@ -1,0 +1,5 @@
+# Running
+
+```
+cargo run --release
+```

@@ -16,7 +16,7 @@ use std::fmt;
 
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use faster::*;
+// use faster::*;
 use itertools::Itertools;
 use ndarray::prelude::*;
 use nohash_hasher::{IntMap, IntSet};

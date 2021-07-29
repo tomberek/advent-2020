@@ -4,19 +4,19 @@ version = "0.1.0"
 authors = ["Tom Bereknyei <tom@rebelliondefense.com>"]
 edition = "2018"
 
-# [unstable]
-# repr_simd = true
-# const_fn = true
-# platform_intrinsics = true
-# custom_inner_ttributes = true
-# try_blocks = true
+[unstable]
+repr_simd = true
+const_fn = true
+platform_intrinsics = true
+custom_inner_ttributes = true
+try_blocks = true
 
 [lib]
 bench = true
 
 [dependencies]
 num = "*"
-faster = "*"
+# faster = "*"
 unroll = "*"
 crc24 = "*"
 bloom = "*"
@@ -26,8 +26,8 @@ futures = "*"
 array2d = "*"
 nohash-hasher = "*"
 scan_fmt = "*"
-packed_simd = "*"
-crypto = "0.1.2"
+packed_simd = { version = "0.3.4",package = "packed_simd_2"}
+crypto = "0.3.0"
 itertools = "0.9.0"
 rayon = "1.5.0"
 aoc-runner = "*"
