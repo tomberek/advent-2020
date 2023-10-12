@@ -33,7 +33,7 @@ fn input_generator(inp: &str) -> Array2D<Point> {
             }
         }).collect())
         .collect::<Vec<Vec<Point>>>();
-    return Array2D::from_rows(&nums);
+    return Array2D::from_rows(&nums).unwrap();
 }
 fn adjacent(inp: &Array2D<Point>, i: usize,j: usize) -> Vec<Point> {
     return NEIGHBORS.iter().filter_map(|a|{
@@ -49,7 +49,7 @@ fn part1(inp: &Array2D<Point>) -> usize {
     let mut current = inp.clone();
     let mut iter = 0;
     loop {
-        let mut new = Array2D::from_rows(&current.as_rows());
+        let mut new = Array2D::from_rows(&current.as_rows()).unwrap();
         let mut change = false;
         for (i,row_iter) in current.rows_iter().enumerate() {
             for (j,&element) in row_iter.enumerate() {
@@ -78,7 +78,7 @@ fn part1(inp: &Array2D<Point>) -> usize {
             }
         }
         iter +=1;
-        current = Array2D::from_rows(&new.as_rows());
+        current = Array2D::from_rows(&new.as_rows()).unwrap();
         if iter > 200 || change == false {
             break
         }

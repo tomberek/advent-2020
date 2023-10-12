@@ -6,5 +6,5 @@ in
     name = "rust";
     buildInputs = [ 
       clippy
-      openssl pkg-config rustup rustracer cargo-flamegraph cmake zlib ];
+      openssl pkg-config rustup cargo-flamegraph cmake zlib ];
   }

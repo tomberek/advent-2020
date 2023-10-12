@@ -8,6 +8,7 @@ use scan_fmt::scan_fmt_some;
 use rayon::prelude::*;
 use std::collections::HashMap;
 use std::collections::HashSet;
+use std::convert::TryInto;
 
 use itertools::Itertools; 
 use nohash_hasher::{IntSet,IntMap};
@@ -38,7 +39,7 @@ fn part1(inp: &Vec<usize>) -> usize {
         }).collect::<Vec<usize>>();
     let a = items.iter().filter(|&&p|p==1).count();
     let b = items.iter().filter(|&&p|p==3).count();
-    return (7 as usize).pow(a as u32) * (4 as usize).pow(b as u32)
+    return a * b;
 }
 
 #[aoc(day10, part2)]
